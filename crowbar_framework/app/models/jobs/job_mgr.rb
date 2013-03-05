@@ -57,6 +57,9 @@ A job in the system, that might have un-met dependencies
     has_many        :dependency_records, :class_name=> "Jobs::DependentJobDependency", :dependent=>:delete_all
     ## since dependency records are self referential, need to identify the relationship using :source
     has_many        :dependencies, :class_name => Jobs::DependentJob.name, :through=>:dependency_records, :source=>:prereq
+    attr_accessible :type # subclass type.
+    attr_accessible :key  # optional lookup key.
+
 
     scope :pending_jobs, where(:done => false)    
     scope :jobs_with_ready_deps, pending_jobs.joins(:dependencies).group(:id).having(:done=>true)
@@ -97,9 +100,6 @@ This is an association class to hold connections between jobs and thier dependen
 
     attr_accessible :job
     attr_accessible :prereq
-    attr_accessible :type
-    attr_accessible :key
-
   end
 
 end
